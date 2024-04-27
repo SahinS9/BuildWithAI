@@ -1,0 +1,68 @@
+<html>
+
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+
+</head>
+  <body>
+
+
+
+    <!-- ... Your HTML and CSS -->
+<div>
+    <input id = 'fromPlace' placeholder = 'current location'>
+    <input id = 'toPlace' placeholder = 'destination city'>
+    <input id = 'duration' placeholder = 'duration of stay'>
+</div>
+    <div>
+    <button id ='btn'>get a result</button>
+</div>
+
+<div>
+ <h3 id = 'output'></h3>
+</div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "@google/generative-ai": "https://esm.run/@google/generative-ai"
+        }
+      }
+    </script>
+    <script type="module">
+      import { GoogleGenerativeAI } from "@google/generative-ai";
+
+      const API_KEY =  'AIzaSyAI87MrunGe3VfvICTmbYH06aj9a8f12wc';
+
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    async function run() {
+        console.log('Workin ...')
+
+  let fromPlace = document.getElementById('fromPlace').value
+  let toPlace = document.getElementById('toPlace').value
+  let duration = document.getElementById('duration').value
+
+  let promptMsg = `Create a travel itinerary from ${fromPlace} to ${toPlace} for ${duration} days.
+                    Give result only in text format`
+ 
+//   For text-only input, use the gemini-pro model
+  const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+
+  const prompt = promptMsg
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  const text = response.text();
+//   console.log(text);
+
+  document.getElementById('output').innerHTML = text
+
+}
+
+
+document.getElementById("btn").addEventListener("click", run);
+    // run()
+      // ...
+    </script>
+  </body>
+</html>
